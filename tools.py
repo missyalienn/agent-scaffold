@@ -5,6 +5,11 @@
 # for issue-based routing where the agent reasons that a request is beyond its capabilities.
 
 
+def escalate_to_human(reason: str) -> dict:
+    """Signal that this request requires human intervention."""
+    return {"escalated": True, "reason": reason}
+
+
 def lookup_order(order_id: str) -> dict:
     return {
         "order_id": order_id,
@@ -22,6 +27,23 @@ def search_knowledge_base(query: str) -> str:
 
 
 TOOL_SCHEMAS = [
+    {
+        "name": "escalate_to_human",
+        "description": (
+            "Escalate the conversation to a human agent when the request is beyond the agent's "
+            "capabilities, requires authoritative judgment, or cannot be resolved with available tools."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "reason": {
+                    "type": "string",
+                    "description": "A brief explanation of why escalation is needed.",
+                },
+            },
+            "required": ["reason"],
+        },
+    },
     {
         "name": "lookup_order",
         "description": "Look up the status and details of a customer order by order ID.",

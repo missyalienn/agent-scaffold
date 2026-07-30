@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 from agent import Agent
 from prompts import DEFAULT_SYSTEM_PROMPT
-from tools import TOOL_SCHEMAS, lookup_order, search_knowledge_base
+from tools import TOOL_SCHEMAS, escalate_to_human, lookup_order, search_knowledge_base
 
 load_dotenv()
 logging.basicConfig(level=logging.WARNING)
@@ -15,6 +15,7 @@ MODEL = "claude-sonnet-4-6"
 def main() -> None:
     agent = Agent(model=MODEL, system_prompt=DEFAULT_SYSTEM_PROMPT, tools=TOOL_SCHEMAS)
 
+    agent.register_tool("escalate_to_human", escalate_to_human)
     agent.register_tool("lookup_order", lookup_order)
     agent.register_tool("search_knowledge_base", search_knowledge_base)
 
